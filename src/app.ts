@@ -1,4 +1,4 @@
-import { interval } from 'rxjs/observable/interval'
+import { interval } from 'rxjs'
 import { take, skip, switchMap, finalize, map } from 'rxjs/operators'
 
 const streamA$ = interval(1000)
