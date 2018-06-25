@@ -1,5 +1,5 @@
 import { interval } from 'rxjs'
-import { take, skip, switchMap, finalize, map } from 'rxjs/operators'
+import { take, skip, switchMap as SwitchMap, finalize, map } from 'rxjs/operators'
 
 const streamA$ = interval(1000)
 .pipe(
@@ -17,7 +17,7 @@ streamA$
   .pipe(
     skip(2),
     take(10),
-    switchMap(() => streamB$)
+    SwitchMap(() => streamB$)
   )
   .subscribe((r) => {
     console.log(r)

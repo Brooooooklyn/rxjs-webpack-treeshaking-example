@@ -3,13 +3,20 @@ const webpack = require('webpack')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const tsImportPluginFactory = require('ts-import-plugin')
 
-const importPlugin = tsImportPluginFactory({
-  libraryName: 'rxjs/operators',
-  style: false,
-  libraryDirectory: '',
-  camel2DashComponentName: false,
-  transformToDefaultImport: false
-})
+const importPlugin = tsImportPluginFactory([
+  {
+    libraryName: 'rxjs/operators',
+    libraryDirectory: '../_esm5/internal/operators',
+    camel2DashComponentName: false,
+    transformToDefaultImport: false
+  },
+  {
+    libraryName: 'rxjs',
+    libraryDirectory: '../_esm5/internal/observable',
+    camel2DashComponentName: false,
+    transformToDefaultImport: false,
+  }
+])
 
 module.exports = {
   entry: {
@@ -38,6 +45,8 @@ module.exports = {
     ]
   },
 
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
@@ -45,19 +54,7 @@ module.exports = {
 
     new webpack.HashedModuleIdsPlugin(),
 
-    new webpack.optimize.UglifyJsPlugin({
-      mangle: {
-        screw_ie8: true
-      },
-      compress: {
-        screw_ie8: true,
-        dead_code: true,
-        warnings: false
-      },
-      beautify: false,
-      sourceMap: false,
-      comments: false
-    }),
+    new webpack.optimize.ModuleConcatenationPlugin(),
 
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',
